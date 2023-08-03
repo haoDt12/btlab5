@@ -1,8 +1,10 @@
 package com.example.lab5.Api;
 
+import com.example.lab5.Model.ProductDataResponse;
 import com.example.lab5.Model.ProductModel;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
@@ -23,21 +25,20 @@ public interface ApiService {
     // ip may ao connect localhost: 10.0.2.2
     // genymontion: 10.0.3.2
     ApiService apiService = new Retrofit.Builder()
-            .baseUrl("http://192.168.1.4:8000/")
+            .baseUrl("http://192.168.1.5:3000/")
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService.class);
-
     @GET("listProduct")
-    Call<List<ProductModel>> getProduct();
+    Call<ProductDataResponse> getProduct();
 
     @POST("addProducts")
-    Call<List<ProductModel>> addProduct(@Body ProductModel productModel);
+    Call<ProductModel> addProduct(@Body ProductModel productModel);
 
     @PUT("products/{id}")
-    Call<List<ProductModel>> updateProduct(@Path("id") String id, @Body ProductModel productModel);
+    Call<ProductModel> updateProduct(@Path("id") String id, @Body ProductModel productModel);
 
     @DELETE("/products/{id}")
-    Call<List<ProductModel>> deleteProduct(@Path("id") String id);
+    Call<ProductModel> deleteProduct(@Path("id") Object id);
 
 }

@@ -3,6 +3,7 @@ package com.example.lab5.Activity;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,25 +50,24 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
            if (name.isEmpty() || price.isEmpty() || description.isEmpty()){
                Toast.makeText(this, "Không được để trống", Toast.LENGTH_SHORT).show();
            }else {
-               addNewData(name, Integer.parseInt(price),description);
+               addNewData(name, Double.parseDouble(price),description);
                finish();
            }
        }
     }
-    private void addNewData(String name, Integer price, String description) {
+    private void addNewData(String name, Double price, String description) {
         ProductModel product = new ProductModel();
         product.setName(name);
         product.setPrice(price);
         product.setDescription(description);
 
-        ApiService.apiService.addProduct(product).enqueue(new Callback<List<ProductModel>>() {
+        ApiService.apiService.addProduct(product).enqueue(new Callback<ProductModel>() {
             @Override
-            public void onResponse(Call<List<ProductModel>> call, Response<List<ProductModel>> response) {
+            public void onResponse(Call<ProductModel> call, Response<ProductModel> response) {
                 if (response.isSuccessful()) {
                     // Xử lý thành công
                     Toast.makeText(AddActivity.this, "Thêm dữ liệu thành công", Toast.LENGTH_SHORT).show();
-
-                    List<ProductModel> tableItems = response.body();
+                    ProductModel tableItems = response.body();
                     TableListAdapter adapter = new TableListAdapter(new ArrayList<>(),AddActivity.this);
                     if (tableItems != null) {
                         adapter.setTableItems(tableItems);
@@ -80,8 +80,9 @@ public class AddActivity extends AppCompatActivity implements View.OnClickListen
             }
 
             @Override
-            public void onFailure(Call<List<ProductModel>> call, Throwable t) {
+            public void onFailure(Call<ProductModel> call, Throwable t) {
                 Toast.makeText(AddActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                Log.d("loi", "onFailure: "+t);
             }
         });
     }

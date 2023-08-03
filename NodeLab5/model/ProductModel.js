@@ -12,6 +12,12 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         require: true
     },
+        created_at: { 
+            type: Date, default: Date.now 
+        },
+    updated_at: { 
+        type: Date, default: null
+     },
 })
 
 const ProductModel = new mongoose.model('products',ProductSchema);
